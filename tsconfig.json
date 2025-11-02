@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "checkJs": true,
+    "allowJs": true,
+    "module": "NodeNext",
+    "lib": ["ESNext"],
+    "types": ["node"],
+    "noEmit": true,
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules"]
+}

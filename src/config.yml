@@ -1,0 +1,137 @@
+commands:
+  # get barometric pressure at sealevel in inHg (dddd format)
+  - pattern: "^l$"
+    type: get
+    dataref: sim/weather/barometer_sealevel_inhg
+    transform:
+      - mult100
+      - round
+
+  # get barometric pressure at sealevel in hPa/mb (dddd format)
+  - pattern: "^q$"
+    type: get
+    dataref: sim/weather/barometer_sealevel_inhg
+    transform:
+      - mult33.8637526
+      - round
+
+  # set barometric pressure at sealevel in inHg (dddd format)
+  - pattern: "^l(\\d{4})$"
+    type: set
+    dataref: sim/cockpit/misc/barometer_setting
+    transform:
+      - mult0.01
+      - toFixed2
+
+  # set barometric pressure at sealevel in hPa/mb (dddd format)
+  - pattern: "^q(\\d{4})$"
+    type: set
+    dataref: sim/cockpit/misc/barometer_setting
+    transform:
+      - mult0.02953009998
+      - toFixed2
+
+  # set heading
+  - pattern: "^h(\\d{3})$"
+    type: set
+    dataref: sim/cockpit/autopilot/heading_mag
+
+  # set transponder code
+  - pattern: "^x(\\d{4})$"
+    type: set
+    dataref: sim/cockpit/radios/transponder_code
+
+  # set autopilot airspeed in KIAS
+  - pattern: "^s(\\d{3})$"
+    type: set
+    dataref: sim/cockpit/autopilot/airspeed
+
+  # set autopilot airspeed in MACH
+  - pattern: "^s(\\d{2})$"
+    type: set
+    dataref: sim/cockpit/autopilot/airspeed
+    transform:
+      - mult0.01
+      - toFixed2
+
+  # set autopilot vertical speed
+  - pattern: "^v(\\d\\d?\\d?\\d?)$"
+    type: set
+    dataref: sim/cockpit/autopilot/vertical_velocity
+
+  # set autopilot target altitude
+  - pattern: "^a((0|\\d\\d\\d\\d\\d?))$"
+    type: set
+    dataref: sim/cockpit/autopilot/altitude
+
+  # set autopilot target flight level
+  - pattern: "^a(\\d\\d\\d?)$"
+    type: set
+    dataref: sim/cockpit/autopilot/altitude
+    transform:
+      - mult10
+      - round
+
+  # set com1 frequency
+  - pattern: "^c1(\\d{6})$"
+    type: set
+    dataref: sim/cockpit2/radios/actuators/com1_frequency_hz_833
+  - pattern: "^c1(\\d{5})$"
+    type: set
+    dataref: sim/cockpit2/radios/actuators/com1_frequency_hz_833
+    transform:
+      - mult10
+      - round
+
+  # set com1 standby frequency
+  - pattern: "^cs1(\\d{6})$"
+    type: set
+    dataref: sim/cockpit2/radios/actuators/com1_standby_frequency_hz_833
+  - pattern: "^cs1(\\d{5})$"
+    type: set
+    dataref: sim/cockpit2/radios/actuators/com1_standby_frequency_hz_833
+    transform:
+      - mult10
+      - round
+
+  # set com2 frequency
+  - pattern: "^c2(\\d{6})$"
+    type: set
+    dataref: sim/cockpit2/radios/actuators/com2_frequency_hz_833
+  - pattern: "^c2(\\d{5})$"
+    type: set
+    dataref: sim/cockpit2/radios/actuators/com2_frequency_hz_833
+    transform:
+      - mult10
+      - round
+
+  # set com2 standby frequency
+  - pattern: "^cs2(\\d{6})$"
+    type: set
+    dataref: sim/cockpit2/radios/actuators/com2_standby_frequency_hz_833
+  - pattern: "^cs2(\\d{5})$"
+    type: set
+    dataref: sim/cockpit2/radios/actuators/com2_standby_frequency_hz_833
+    transform:
+      - mult10
+      - round
+
+  # set nav1 frequency
+  - pattern: "^n1(\\d{5})$"
+    type: set
+    dataref: sim/cockpit/radios/nav1_freq_hz
+
+  # set nav1 standby frequency
+  - pattern: "^ns1(\\d{5})$"
+    type: set
+    dataref: sim/cockpit/radios/nav1_stdby_freq_hz
+
+  # set nav2 frequency
+  - pattern: "^n2(\\d{5})$"
+    type: set
+    dataref: sim/cockpit/radios/nav2_freq_hz
+
+  # set nav2 standby frequency
+  - pattern: "^ns2(\\d{5})$"
+    type: set
+    dataref: sim/cockpit/radios/nav2_stdby_freq_hz

@@ -1,0 +1,240 @@
+#!/usr/bin/env node
+
+import {
+  createPrompt,
+  isDownKey,
+  isEnterKey,
+  isUpKey,
+  useKeypress,
+  useState,
+} from "@inquirer/core";
+import chalk from "chalk";
+import { program } from "commander";
+import ora from "ora";
+
+import { getDatarefValue, initAPI, setDatarefValue } from "../src/api.js";
+import { copyToClipboard } from "../src/clipboard.js";
+import { getConfig } from "../src/config.js";
+import { clearLine, hideCursor, showCursor } from "../src/console.js";
+import { isEconnRefused } from "../src/error.js";
+import history from "../src/history.js";
+import { sleep } from "../src/sleep.js";
+
+const PREFIX = "🛩 ";
+
+program
+  .version("1.0.0")
+  .description("xp-command")
+  .option("-p, --port <number>", "server port number");
+
+/**
+ * @param {string} command
+ */
+const processCommand = async (command) => {
+  const spinner = ora(`${PREFIX} ${chalk.cyan(command)}`).start();
+  hideCursor();
+
+  /** @type {import('../src/config.js').CommandConfig} */
+  let config;
+  try {
+    config = await getConfig();
+  } catch (error) {
+    if (isEconnRefused(error)) {
+      spinner.fail(chalk.red(`${PREFIX} No connection - in aircraft?`));
+      hideCursor();
+      await sleep(1500);
+      showCursor();
+      return;
+    }
+  }
+
+  /**
+   * @param {number|Array<number>|string} value
+   * @param {import('../src/config.js').Transform} transform
+   */
+  const getTransformedValue = (value, transform) => {
+    if (Array.isArray(value)) return value.slice();
+
+    if (transform.startsWith("mult")) {
+      const factor = parseFloat(transform.slice(4));
+      if (isNaN(factor)) return value;
+      return Number(value) * factor;
+    }
+
+    if (transform.toLowerCase().startsWith("tofixed")) {
+      const digits = parseInt(transform.slice(7));
+      if (isNaN(digits)) return value;
+      return Number(Number(value).toFixed(digits));
+    }
+
+    if (transform === "round") {
+      return Math.round(Number(value));
+    }
+
+    return value;
+  };
+
+  /** @type {Array<[RegExp, (regExpResult: Array<string> | null) => Promise<void>]>} */
+  const matches = config.commands.map((c) => {
+    switch (c.type) {
+      case "get":
+        return [
+          new RegExp(c.pattern),
+          async () => {
+            let value = await getDatarefValue(c.dataref);
+            c.transform?.forEach((t) => {
+              value = getTransformedValue(value, t);
+            });
+            await copyToClipboard(JSON.stringify(value));
+            spinner.succeed(chalk.green(`${PREFIX} ${value}`));
+            hideCursor();
+            await sleep(1500);
+            clearLine();
+          },
+        ];
+      case "set":
+        return [
+          new RegExp(c.pattern),
+          async (regExpResult) => {
+            let value = regExpResult[1];
+            c.transform?.forEach((t) => {
+              value = String(getTransformedValue(value, t));
+            });
+
+            await setDatarefValue(c.dataref, Number(value));
+            spinner.succeed(chalk.green(`${PREFIX} ${command}`));
+            hideCursor();
+            await sleep(1500);
+            clearLine();
+          },
+        ];
+    }
+  });
+
+  for (const [regexp, cb] of matches) {
+    const regexpResult = regexp.exec(command);
+    if (regexpResult !== null) {
+      try {
+        await cb(regexpResult);
+
+        spinner.succeed();
+        hideCursor();
+
+        showCursor();
+      } catch (error) {
+        spinner.fail();
+        hideCursor();
+
+        if (error instanceof Error) {
+          if (isEconnRefused(error)) {
+            clearLine();
+            spinner.fail(chalk.red(`${PREFIX} No connection - in aircraft?`));
+            await sleep(1500);
+          } else if (error.name === "APIError") {
+            clearLine();
+            spinner.fail(chalk.red(`${PREFIX} ${error.message}`));
+            await sleep(1500);
+          } else {
+            throw error;
+          }
+        } else {
+          throw error;
+        }
+
+        await sleep(500);
+        showCursor();
+      }
+      return;
+    }
+  }
+
+  spinner.fail(chalk.red(`${PREFIX} ${command}`));
+  hideCursor();
+
+  await sleep(1500);
+  showCursor();
+};
+
+const sayHello = () => {
+  console.log(chalk.magenta("  👋 Hello!"));
+};
+const sayBye = () => {
+  console.log(chalk.magenta("  👋 Bye!"));
+};
+
+const askForCommand = async () => {
+  clearLine();
+
+  const prompt = createPrompt((config, done) => {
+    const [value, setValue] = useState();
+    const [, setStatus] = useState("idle");
+
+    useKeypress((key, readline) => {
+      if (isEnterKey(key)) {
+        setStatus("done");
+        history.addCommand(value);
+        done(value);
+      } else if (isUpKey(key)) {
+        const v = history.up();
+        setValue(v);
+        readline.line = v;
+      } else if (isDownKey(key)) {
+        const v = history.down();
+        setValue(v);
+        readline.line = v;
+      } else {
+        setValue(readline.line);
+      }
+    });
+
+    return `${config[0].theme.prefix} ${config[0].message ?? ""} ${value ?? ""}`;
+  });
+
+  const command = await prompt(
+    [
+      {
+        type: "input",
+        name: "command",
+        message: "",
+        theme: {
+          prefix: "  🛩",
+        },
+      },
+    ],
+    { clearPromptOnDone: true },
+  );
+
+  if (command.toLowerCase() === "exit") {
+    sayBye();
+    return;
+  }
+
+  await processCommand(command);
+
+  await askForCommand();
+};
+
+program.action(async (/** @type {{ port: number | undefined }} */ options) => {
+  initAPI({ port: options.port ?? 8086 });
+
+  hideCursor();
+  clearLine();
+  sayHello();
+  await sleep(1000);
+  showCursor();
+
+  await askForCommand();
+});
+
+program.parse(process.argv);
+
+process.on("uncaughtException", (error) => {
+  if (error instanceof Error) {
+    if (error.name === "ExitPromptError") {
+      clearLine();
+      sayBye();
+      return;
+    }
+  }
+  throw error;
+});

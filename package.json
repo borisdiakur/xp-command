@@ -1,0 +1,44 @@
+{
+  "name": "xp-command",
+  "version": "1.0.0",
+  "description": "Quick cockpit commands for X-Plane 12 - set your radios, altimeter, autopilot, and more from the terminal while flying.",
+  "type": "module",
+  "bin": {
+    "xp-command": "./bin/index.js"
+  },
+  "scripts": {
+    "start": "node bin/index.js",
+    "start:clean": "npm run clean && npm start",
+    "clean": "rm -rf ~/.xp-command/"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.9.2",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^16.5.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2"
+  },
+  "keywords": [
+    "X-Plane"
+  ],
+  "author": "Boris Diakur (https://borisdiakur.de)",
+  "repository": "borisdiakur/xp-command",
+  "license": "MIT",
+  "dependencies": {
+    "@inquirer/core": "^10.3.0",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.2",
+    "conf": "^15.0.2",
+    "inquirer": "^12.10.0",
+    "js-yaml": "^4.1.0",
+    "ora": "^9.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

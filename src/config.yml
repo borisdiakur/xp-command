@@ -69,7 +69,7 @@ commands:
     type: set
     dataref: sim/cockpit/autopilot/altitude
     transform:
-      - mult10
+      - mult100
       - round
 
   # set com1 frequency

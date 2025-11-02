@@ -10,3 +10,10 @@ export const isEconnRefused = (error) => {
       error.cause.code === "ECONNREFUSED",
   );
 };
+
+/**
+ * @param {unknown} error
+ */
+export const isAPIError = (error) => {
+  return Boolean(error instanceof Error && error.name === "APIError");
+};

@@ -16,7 +16,7 @@ import { getDatarefValue, initAPI, setDatarefValue } from "../src/api.js";
 import { copyToClipboard } from "../src/clipboard.js";
 import { getConfig } from "../src/config.js";
 import { clearLine, hideCursor, showCursor } from "../src/console.js";
-import { isEconnRefused } from "../src/error.js";
+import { isAPIError, isEconnRefused } from "../src/error.js";
 import history from "../src/history.js";
 import { sleep } from "../src/sleep.js";
 
@@ -31,7 +31,7 @@ program
  * @param {string} command
  */
 const processCommand = async (command) => {
-  const spinner = ora(`${PREFIX} ${chalk.cyan(command)}`).start();
+  const spinner = ora(`${PREFIX} ${chalk.cyan(command ?? "")}`).start();
   hideCursor();
 
   /** @type {import('../src/config.js').CommandConfig} */
@@ -39,7 +39,7 @@ const processCommand = async (command) => {
   try {
     config = await getConfig();
   } catch (error) {
-    if (isEconnRefused(error)) {
+    if (isEconnRefused(error) || isAPIError(error)) {
       spinner.fail(chalk.red(`${PREFIX} No connection - in aircraft?`));
       hideCursor();
       await sleep(1500);
@@ -148,7 +148,7 @@ const processCommand = async (command) => {
     }
   }
 
-  spinner.fail(chalk.red(`${PREFIX} ${command}`));
+  spinner.fail(chalk.red(`${PREFIX} ${command ?? ""}`));
   hideCursor();
 
   await sleep(1500);
@@ -204,7 +204,7 @@ const askForCommand = async () => {
     { clearPromptOnDone: true },
   );
 
-  if (command.toLowerCase() === "exit") {
+  if (command?.toLowerCase() === "exit") {
     sayBye();
     return;
   }

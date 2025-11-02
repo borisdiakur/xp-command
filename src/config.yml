@@ -55,7 +55,7 @@ commands:
       - toFixed2
 
   # set autopilot vertical speed
-  - pattern: "^v(\\d\\d?\\d?\\d?)$"
+  - pattern: "^v(-?\\d\\d?\\d?\\d?)$"
     type: set
     dataref: sim/cockpit/autopilot/vertical_velocity
 

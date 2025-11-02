@@ -2,6 +2,10 @@
 
 **Quick cockpit commands for X-Plane 12** - set your radios, altimeter, autopilot, and more from the terminal while flying.
 
+| ![Screenshot 1](https://private-user-images.githubusercontent.com/527049/508717737-406f9777-65fa-4e68-a567-0000ab0752ff.gif?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjIwOTU0MTgsIm5iZiI6MTc2MjA5NTExOCwicGF0aCI6Ii81MjcwNDkvNTA4NzE3NzM3LTQwNmY5Nzc3LTY1ZmEtNGU2OC1hNTY3LTAwMDBhYjA3NTJmZi5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUxMTAyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MTEwMlQxNDUxNThaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT04NDBmMmE4NjhjNDYzZTM2NGZiNjE2MzcxNGEzY2U3MjkwMDZlMmI2OWIxNGZiZjdkM2Y2MzEyNzA4OWEwZmNmJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.Mfno_SxgF05_L4D9t7vQnmkRsPhkbkl-APGzOsH8CL8) | ![Screenshot 2](https://private-user-images.githubusercontent.com/527049/508717738-6fe80ed3-a30e-4b0d-b368-54061fb044ae.gif?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjIwOTU0MTgsIm5iZiI6MTc2MjA5NTExOCwicGF0aCI6Ii81MjcwNDkvNTA4NzE3NzM4LTZmZTgwZWQzLWEzMGUtNGIwZC1iMzY4LTU0MDYxZmIwNDRhZS5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUxMTAyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MTEwMlQxNDUxNThaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1kMGJhM2UyMzZmMDcxMTg4MmVhMDhiYzRmY2VjYTBmMzc1ZjQxZjI0NDQwYWViODZhZWM5MDIxNThiM2VjMzYzJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.zTG3-LCMrCInyRSHbkdWzARl4gpeTQtUM3oeRj9teQo) |
+| ----------------- | ---------------- |
+
+
 ---
 
 ## 🎯 What does this tool do?
@@ -26,11 +30,7 @@ You need Node.js version 22 or higher installed on your system:
 
 1. **Download Node.js**: Go to https://nodejs.org/en/download/ and download the **LTS version** (Long Term Support)
 2. **Install**: Run the downloaded installer
-3. **Verify**: Open Terminal and type:
-   ```bash
-   node --version
-   ```
-   You should see something like `v22.x.x`
+3. **Verify**: Open Terminal and type `node --version` (you should see something like `v22.x.x`)
 
 ### Step 2: Install xp-command globally
 
@@ -60,10 +60,7 @@ You shouldn't need to perform any extra setup steps in X-Plane. There is no plug
 
 1. **Load into an aircraft** in X-Plane 12
 2. **Open Terminal** on your machine
-3. **Run**:
-   ```bash
-   xp-command
-   ```
+3. **Run** `xp-command`
 
 You'll see a prompt:
 ```

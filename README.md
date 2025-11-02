@@ -90,7 +90,7 @@ Type `exit` or press `Ctrl+C`
 
 All pre-configured commands work well with most aircraft I currently fly, but you may want to adjust them for **your** aircraft (see _Aircraft-specific profiles_ section below).
 
-### Barometric Pressure
+### Barometric pressure
 
 | Command | Action                                  | Example      |
 |---------|-----------------------------------------|--------------|
@@ -148,11 +148,11 @@ You can edit these YAML files to add aircraft-specific commands or modify existi
 **Example**: Add a command to set heading with 10-degree increments:
 
 ```yaml
-  - pattern: "^hdg(\\d{2})$"  
-    type: set
-    dataref: sim/cockpit/autopilot/heading_mag
-    transform:
-      - mult10
+- pattern: "^hdg(\\d{2})$"  
+  type: set
+  dataref: sim/cockpit/autopilot/heading_mag
+  transform:
+    - mult10
 ```
 
 **Key components:**
@@ -161,7 +161,7 @@ You can edit these YAML files to add aircraft-specific commands or modify existi
 - `dataref`: X-Plane dataref path (find these in X-Plane's DataRef Editor)
 - `transform`: Optional value conversions (multiply, divide, round, etc.)
 
-**Finding datarefs**: Use X-Plane's built-in **DataRef Editor** plugin or check [X-Plane datarefs documentation](https://developer.x-plane.com/datarefs/).
+**Finding datarefs**: Use [the DataRefTool plugin](https://datareftool.com) or check [X-Plane datarefs documentation](https://developer.x-plane.com/datarefs/).
 
 #### Array Datarefs
 
@@ -266,7 +266,7 @@ npm uninstall -g xp-command
 
 ---
 
-## 🛣 How it works (technical overview)
+## 💡 How it works (technical overview)
 
 1. **Web API connection**: Uses [X-Plane local REST Web API](https://developer.x-plane.com/article/x-plane-web-api/) 
 2. **Dataref system**: Reads/writes X-Plane datarefs (internal simulator variables)

@@ -134,9 +134,8 @@ All pre-configured commands work well with most aircraft I currently fly, but yo
 
 The first time you run xp-command in a new aircraft, it automatically creates a configuration file at:
 
-```
-~/.xp-command/<Aircraft Name>.yml
-```
+- **macOS/Linux:** `~/.xp-command/<Aircraft Name>.yml`
+- **Windows:** `%USERPROFILE%\.xp-command\<Aircraft Name>.yml`
 
 ### Customizing commands
 
@@ -158,7 +157,7 @@ You can edit these YAML files to add aircraft-specific commands or modify existi
 - `dataref`: X-Plane dataref path (find these in X-Plane's DataRef Editor)
 - `transform`: Optional value conversions (multiply, divide, round, etc.)
 
-**Finding datarefs**: Use [the DataRefTool plugin](https://datareftool.com) or check [X-Plane datarefs documentation](https://developer.x-plane.com/datarefs/).
+**Finding datarefs**: Use the [DataRefTool plugin](https://datareftool.com) or check [X-Plane datarefs documentation](https://developer.x-plane.com/datarefs/).
 
 #### Array Datarefs
 
@@ -179,8 +178,8 @@ If you've edited an aircraft configuration and xp-command crashes or stops worki
 
 Aircraft profiles are stored in:
 
-**macOS/Linux:** `~/.xp-command/`  
-**Windows:** `%USERPROFILE%\.xp-command\`
+- **macOS/Linux:** `~/.xp-command/`  
+- **Windows:** `%USERPROFILE%\.xp-command\`
 
 Each aircraft has its own `.yml` file named after the aircraft (e.g., `Cessna 172SP.yml`).
 
@@ -235,6 +234,16 @@ The tool will automatically recreate default configurations when you next fly ea
   
 **Cause:** Invalid YAML syntax when editing config files  
 **Fix:** Create backups of problematic aircraft's `.yml` files and delete them or the entire profiles folder
+
+---
+
+## ⬆️️ Updating
+
+Open Terminal and run:
+
+```bash
+npm update -g xp-command
+```
 
 ---
 

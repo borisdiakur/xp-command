@@ -2,7 +2,7 @@
 
 **Quick cockpit commands for X-Plane 12** - set your radios, altimeter, autopilot, and more from the terminal while flying.
 
-| ![Screenshot 1](https://media.invisioncic.com/c334187/monthly_2025_11/ScreenRecording2025-11-02at15_01_22.gif.5f0f7b7ee4b4d19ad2717381c4bb7ca3.gif) | ![Screenshot 2](https://media.invisioncic.com/c334187/monthly_2025_11/ScreenRecording2025-11-02at14_53_18.gif.272f0344c1c36e2868f7c9bca7a8f422.gif) |
+| ![screenshot1](https://github.com/user-attachments/assets/b07bda9e-6d45-430b-bbdb-26dad4c81c59) | ![screenshot2](https://github.com/user-attachments/assets/78d828c2-d838-4fcd-998d-1ac19ec2d5c8) |
 | ----------------- | ---------------- |
 
 

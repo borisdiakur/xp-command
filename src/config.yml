@@ -135,3 +135,13 @@ commands:
   - pattern: "^ns2(\\d{5})$"
     type: set
     dataref: sim/cockpit/radios/nav2_stdby_freq_hz
+      
+  # set adf1
+  - pattern: "^adf1((\\d{3}))$"
+    type: set
+    dataref: sim/cockpit/radios/adf1_freq_hz
+  
+  # set adf2
+  - pattern: "^adf2((\\d{3}))$"
+    type: set
+    dataref: sim/cockpit/radios/adf2_freq_hz

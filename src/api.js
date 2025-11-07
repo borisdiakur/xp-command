@@ -108,7 +108,7 @@ export const getDatarefValue = async (datarefNameWithOptionalIndex) => {
 
 /**
  * @param {string} datarefNameWithOptionalIndex
- * @param {number|Array<number>} [value]
+ * @param {number|string} value
  */
 export const setDatarefValue = async (datarefNameWithOptionalIndex, value) => {
   const [datarefName, index] = parseDataref(datarefNameWithOptionalIndex);
@@ -126,7 +126,7 @@ export const setDatarefValue = async (datarefNameWithOptionalIndex, value) => {
     method: "PATCH",
     body: JSON.stringify({ data: value }),
   });
-  const json = /** @type { {data: number|Array<number> } | APIError } */ (
+  const json = /** @type { {data: number|string } | APIError } */ (
     await response.json()
   );
 

@@ -119,6 +119,8 @@ All pre-configured commands work well with most aircraft I currently fly, but yo
 | `ns1#####` | Set NAV1 standby | No decimal | `ns1116600` → 116.600 |
 | `n2#####`  | Set NAV2 active  | No decimal | `n2113900` → 113.900  |
 | `ns2#####` | Set NAV2 standby | No decimal | `ns2115700` → 115.700 |
+| `adf1###`  | Set ADF1         | No decimal | `adf1333` → 333.0     |
+| `adf2###`  | Set ADF2         | No decimal | `adf2444` → 444.0     |
 
 **Radio frequency format:** Remove the decimal point. For `118.900`, type `118900`. For COM1 and COM2 you can omit the last digit – the value will be padded with 0.
 

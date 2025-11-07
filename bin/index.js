@@ -49,7 +49,7 @@ const processCommand = async (command) => {
   }
 
   /**
-   * @param {number|Array<number>|string} value
+   * @param {number|string} value
    * @param {import('../src/config.js').Transform} transform
    */
   const getTransformedValue = (value, transform) => {
@@ -96,12 +96,17 @@ const processCommand = async (command) => {
         return [
           new RegExp(c.pattern),
           async (regExpResult) => {
-            let value = regExpResult[1];
-            c.transform?.forEach((t) => {
-              value = String(getTransformedValue(value, t));
-            });
-
-            await setDatarefValue(c.dataref, Number(value));
+            let value = String(regExpResult[1]);
+            
+            if (isNaN(Number(value))) {
+              const base64 = Buffer.from(value, 'utf-8').toString('base64');
+              await setDatarefValue(c.dataref, base64);
+            } else {
+              c.transform?.forEach((t) => {
+                value = String(getTransformedValue(value, t));
+              });
+              await setDatarefValue(c.dataref, Number(value));
+            }
             spinner.succeed(chalk.green(`${PREFIX} ${command}`));
             hideCursor();
             await sleep(1500);

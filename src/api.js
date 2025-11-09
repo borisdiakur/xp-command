@@ -67,7 +67,7 @@ export const initAPI = (options) => {
 
 /**
  * @param {string} datarefNameWithOptionalIndex
- * @return {Promise<number|Array<number>|string>}
+ * @return {Promise<number|string>}
  */
 export const getDatarefValue = async (datarefNameWithOptionalIndex) => {
   const [datarefName, index] = parseDataref(datarefNameWithOptionalIndex);
@@ -105,6 +105,20 @@ export const getDatarefValue = async (datarefNameWithOptionalIndex) => {
 
   return JSON.stringify(json.data);
 };
+
+/**
+ * @param {string|Array<string>} datarefNamesWithOptionalIndex
+ * @return {Promise<number|string>}
+ */
+export const getDatarefValues = async (datarefNamesWithOptionalIndex) => {
+  if (Array.isArray(datarefNamesWithOptionalIndex)) {
+    return Promise.all(datarefNamesWithOptionalIndex.map(dataref => getDatarefValue(dataref))).then(results => {
+      return results.map(v => String(v)).join('\n').trim()
+    })
+  }
+  
+  return getDatarefValue(datarefNamesWithOptionalIndex)
+}
 
 /**
  * @param {string} datarefNameWithOptionalIndex

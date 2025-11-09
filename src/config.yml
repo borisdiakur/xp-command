@@ -72,7 +72,7 @@ commands:
       - mult100
       - round
 
-  # set com1 frequency
+  # set COM1 frequency
   - pattern: "^c1(\\d{6})$"
     type: set
     dataref: sim/cockpit2/radios/actuators/com1_frequency_hz_833
@@ -83,7 +83,7 @@ commands:
       - mult10
       - round
 
-  # set com1 standby frequency
+  # set COM1 standby frequency
   - pattern: "^cs1(\\d{6})$"
     type: set
     dataref: sim/cockpit2/radios/actuators/com1_standby_frequency_hz_833
@@ -94,7 +94,7 @@ commands:
       - mult10
       - round
 
-  # set com2 frequency
+  # set COM2 frequency
   - pattern: "^c2(\\d{6})$"
     type: set
     dataref: sim/cockpit2/radios/actuators/com2_frequency_hz_833
@@ -105,7 +105,7 @@ commands:
       - mult10
       - round
 
-  # set com2 standby frequency
+  # set COM2 standby frequency
   - pattern: "^cs2(\\d{6})$"
     type: set
     dataref: sim/cockpit2/radios/actuators/com2_standby_frequency_hz_833
@@ -116,32 +116,63 @@ commands:
       - mult10
       - round
 
-  # set nav1 frequency
+  # set NAV1 frequency
   - pattern: "^n1(\\d{5})$"
     type: set
     dataref: sim/cockpit/radios/nav1_freq_hz
 
-  # set nav1 standby frequency
+  # set NAV1 standby frequency
   - pattern: "^ns1(\\d{5})$"
     type: set
     dataref: sim/cockpit/radios/nav1_stdby_freq_hz
 
-  # set nav2 frequency
+  # set NAV2 frequency
   - pattern: "^n2(\\d{5})$"
     type: set
     dataref: sim/cockpit/radios/nav2_freq_hz
 
-  # set nav2 standby frequency
+  # set NAV2 standby frequency
   - pattern: "^ns2(\\d{5})$"
     type: set
     dataref: sim/cockpit/radios/nav2_stdby_freq_hz
-      
-  # set adf1
-  - pattern: "^adf1((\\d{3}))$"
+
+  # set ADF1
+  - pattern: "^adf1(\\d{3})$"
     type: set
     dataref: sim/cockpit/radios/adf1_freq_hz
-  
-  # set adf2
-  - pattern: "^adf2((\\d{3}))$"
+
+  # set ADF2
+  - pattern: "^adf2(\\d{3})$"
     type: set
     dataref: sim/cockpit/radios/adf2_freq_hz
+
+  # set BARO minimum
+  - pattern: "^m(\\d\\d?\\d?|[0-4]\\d\\d\\d|5000)$"
+    type: set
+    dataref: sim/cockpit2/gauges/actuators/baro_altimeter_bug_ft_pilot
+
+  # set RA minimum
+  - pattern: "^mra(\\d\\d?\\d?|[0-4]\\d\\d\\d|5000)$"
+    type: set
+    dataref: sim/cockpit/misc/radio_altimeter_minimum
+      
+  # copy FMS to clipboard
+  - pattern: "^fm(s|c)$"
+    type: get
+    dataref: 
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line0
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line1
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line2
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line3
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line4
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line5
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line6
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line7
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line8
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line9
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line10
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line11
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line12
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line13
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line14
+      - sim/cockpit2/radios/indicators/fms_cdu1_text_line15

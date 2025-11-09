@@ -12,7 +12,7 @@ import chalk from "chalk";
 import { program } from "commander";
 import ora from "ora";
 
-import { getDatarefValue, initAPI, setDatarefValue } from "../src/api.js";
+import { getDatarefValues, initAPI, setDatarefValue } from "../src/api.js";
 import { copyToClipboard } from "../src/clipboard.js";
 import { getConfig } from "../src/config.js";
 import { clearLine, hideCursor, showCursor } from "../src/console.js";
@@ -81,12 +81,15 @@ const processCommand = async (command) => {
         return [
           new RegExp(c.pattern),
           async () => {
-            let value = await getDatarefValue(c.dataref);
+            let value = await getDatarefValues(c.dataref);
             c.transform?.forEach((t) => {
               value = getTransformedValue(value, t);
             });
-            await copyToClipboard(JSON.stringify(value));
-            spinner.succeed(chalk.green(`${PREFIX} ${value}`));
+            const asString = String(value)
+            await copyToClipboard(asString);
+            const lines = asString.split('\n')
+            const firstLine = lines[0]
+            spinner.succeed(chalk.green(`${PREFIX} ${lines.length > 1 ? firstLine + '...' : firstLine}`));
             hideCursor();
             await sleep(1500);
             clearLine();

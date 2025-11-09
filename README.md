@@ -89,23 +89,30 @@ All pre-configured commands work well with most aircraft I currently fly, but yo
 
 ### Barometric pressure
 
-| Command | Action                                  | Example      |
-|---------|-----------------------------------------|--------------|
-| `q`     | Get QNH in hPa/mb (copied to clipboard) | `q` → `1013` |
-| `l`     | Get QNH in inHg (copied to clipboard)   | `l` → `2992` |
-| `q####` | Set QNH in hPa/mb                       | `q1013`      |
-| `l####` | Set QNH in inHg                         | `l2992`      |
+| Command  | Action                                  | Example      |
+|----------|-----------------------------------------|--------------|
+| `q`      | Get QNH in hPa/mb (copied to clipboard) | `q` → `1013` |
+| `l`      | Get QNH in inHg (copied to clipboard)   | `l` → `2992` |
+| `q####`  | Set QNH in hPa/mb                       | `q1013`      |
+| `l####`  | Set QNH in inHg                         | `l2992`      |
+| `m###`   | Set BARO minimum in feet                | `m200`       |
+| `mra###` | Set RA minimum in feet                  | `mra1451`    |
+
+**Minimums format:** Minimums take one to four digits and can range from 0 to 5000.
 
 ### Autopilot
 
-| Command  | Action                      | Example                   |
-|----------|-----------------------------|---------------------------|
-| `h###`   | Set heading                 | `h090` → 090°             |
-| `a###`   | Set altitude (flight level) | `a250` → FL250 (25000 ft) |
-| `a#####` | Set altitude (exact feet)   | `a03500` → 3500 ft        |
-| `s###`   | Set speed in KIAS           | `s180` → 180 knots        |
-| `s##`    | Set speed in Mach           | `s78` → Mach 0.78         |
-| `v####`  | Set vertical speed          | `v1500` → 1500 ft/min     |
+| Command  | Action                                  | Example                   |
+|----------|-----------------------------------------|---------------------------|
+| `h###`   | Set heading                             | `h090` → 090°             |
+| `a###`   | Set altitude (flight level)             | `a250` → FL250 (25000 ft) |
+| `a#####` | Set altitude (exact feet)               | `a03500` → 3500 ft        |
+| `s###`   | Set speed in KIAS                       | `s180` → 180 knots        |
+| `s##`    | Set speed in Mach                       | `s78` → Mach 0.78         |
+| `v####`  | Set vertical speed                      | `v1500` → 1500 ft/min     |
+| `fms`    | Copy current FMS CDU1 text to clipboard |                           |
+
+**The `fms` command:** This command can be very helpful, if you want to quickly paste the FMS screen content into a prompt. Note that only the first line will be shortly displayed in xp-command cli while the full text will be copied to clipboard.
 
 ### Radios
 
@@ -155,7 +162,7 @@ You can edit these YAML files to add aircraft-specific commands or modify existi
 
 **Key components:**
 - `pattern`: Regular expression matching your command (`hdg18`)
-- `type`: Either `get` (read value) or `set` (write value)
+- `type`: Either `get` (read value and copy to clipboard) or `set` (write value)
 - `dataref`: X-Plane dataref path (find these in X-Plane's DataRef Editor)
 - `transform`: Optional value conversions (multiply, divide, round, etc.)
 

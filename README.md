@@ -179,6 +179,19 @@ Many X-Plane datarefs are arrays (e.g., for multiple engines, generators, radios
   dataref: sim/cockpit/electrical/generator_on[1]
 ```
 
+Here is an example of a custom set command which sets multiple datarefs at once (all datarefs receive the same value):
+
+```yaml
+# toggle door and chocks
+- pattern: "^d(0|1)$"
+  type: set
+  dataref:
+    - sim/cockpit2/switches/door_open[0]
+    - sim/flightmodel2/gear/is_chocked[0]
+    - sim/flightmodel2/gear/is_chocked[1]
+    - sim/flightmodel2/gear/is_chocked[2]
+```
+
 ## 🔄 Resetting Aircraft Profiles
 
 If you've edited an aircraft configuration and xp-command crashes or stops working, you can reset to default settings by deleting the config files.

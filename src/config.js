@@ -20,7 +20,7 @@ const __dirname = dirname(__filename);
  * @typedef {Object} Command
  * @property {RegExp} pattern - Regular expression pattern to match commands
  * @property {'get' | 'set'} type - Operation type
- * @property {string} dataref - X-Plane dataref path
+ * @property {string|Array<string>} dataref - X-Plane dataref path(s)
  * @property {Transform[]} transform - Array of transformation operations to apply
  */
 

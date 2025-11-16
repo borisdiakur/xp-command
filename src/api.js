@@ -150,3 +150,18 @@ export const setDatarefValue = async (datarefNameWithOptionalIndex, value) => {
 
   return json;
 };
+
+/**
+ * @param {string|Array<string>} datarefNamesWithOptionalIndex
+ * @param {number|string} value
+ * @return {Promise<number|string>}
+ */
+export const setDatarefValues = async (datarefNamesWithOptionalIndex, value) => {
+  if (Array.isArray(datarefNamesWithOptionalIndex)) {
+    return Promise.all(datarefNamesWithOptionalIndex.map(dataref => setDatarefValue(dataref, value))).then(results => {
+      return results[0]
+    })
+  }
+  
+  return setDatarefValue(datarefNamesWithOptionalIndex, value)
+}

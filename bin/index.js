@@ -12,7 +12,7 @@ import chalk from "chalk";
 import { program } from "commander";
 import ora from "ora";
 
-import { getDatarefValues, initAPI, setDatarefValue } from "../src/api.js";
+import { getDatarefValues, initAPI, setDatarefValues } from "../src/api.js";
 import { copyToClipboard } from "../src/clipboard.js";
 import { getConfig } from "../src/config.js";
 import { clearLine, hideCursor, showCursor } from "../src/console.js";
@@ -103,12 +103,12 @@ const processCommand = async (command) => {
             
             if (isNaN(Number(value))) {
               const base64 = Buffer.from(value, 'utf-8').toString('base64');
-              await setDatarefValue(c.dataref, base64);
+              await setDatarefValues(c.dataref, base64);
             } else {
               c.transform?.forEach((t) => {
                 value = String(getTransformedValue(value, t));
               });
-              await setDatarefValue(c.dataref, Number(value));
+              await setDatarefValues(c.dataref, Number(value));
             }
             spinner.succeed(chalk.green(`${PREFIX} ${command}`));
             hideCursor();

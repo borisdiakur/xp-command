@@ -20,12 +20,15 @@ import { isAPIError, isEconnRefused } from "../src/error.js";
 import history from "../src/history.js";
 import { sleep } from "../src/sleep.js";
 
+import packageJson from '../package.json' with { type: 'json' };
+
 const PREFIX = "🛩 ";
 
 program
-  .version("1.0.0")
-  .description("xp-command")
-  .option("-p, --port <number>", "server port number");
+  .version(packageJson.version)
+  .description(`${PREFIX} ${packageJson.name}\n${packageJson.description}`)
+  .option("-p, --port <number>", "server port number")
+  .helpOption('-h, --help', 'display this help text');
 
 /**
  * @param {string} command

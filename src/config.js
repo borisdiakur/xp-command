@@ -47,7 +47,7 @@ export const getConfig = async () => {
   let aircraft;
   aircraft = /** @type {string} */ (
     await getDatarefValue("sim/aircraft/view/acf_ui_name")
-  );
+  ).replaceAll(/[./\\]/g, ' ');
   const aircraftConfigPath = join(osHomedir, ".xp-command", `${aircraft}.yml`);
 
   let config;

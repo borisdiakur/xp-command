@@ -1,6 +1,6 @@
 {
   "name": "xp-command",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Quick cockpit commands for X-Plane 12 - set your radios, altimeter, autopilot, and more from the terminal while flying.",
   "keywords": [
     "xplane",

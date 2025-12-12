@@ -112,13 +112,18 @@ export const getDatarefValue = async (datarefNameWithOptionalIndex) => {
  */
 export const getDatarefValues = async (datarefNamesWithOptionalIndex) => {
   if (Array.isArray(datarefNamesWithOptionalIndex)) {
-    return Promise.all(datarefNamesWithOptionalIndex.map(dataref => getDatarefValue(dataref))).then(results => {
-      return results.map(v => String(v)).join('\n').trim()
-    })
+    return Promise.all(
+      datarefNamesWithOptionalIndex.map((dataref) => getDatarefValue(dataref)),
+    ).then((results) => {
+      return results
+        .map((v) => String(v))
+        .join("\n")
+        .trim();
+    });
   }
-  
-  return getDatarefValue(datarefNamesWithOptionalIndex)
-}
+
+  return getDatarefValue(datarefNamesWithOptionalIndex);
+};
 
 /**
  * @param {string} datarefNameWithOptionalIndex
@@ -154,14 +159,19 @@ export const setDatarefValue = async (datarefNameWithOptionalIndex, value) => {
 /**
  * @param {string|Array<string>} datarefNamesWithOptionalIndex
  * @param {number|string} value
- * @return {Promise<number|string>}
+ * @return {Promise<void>}
  */
-export const setDatarefValues = async (datarefNamesWithOptionalIndex, value) => {
+export const setDatarefValues = async (
+  datarefNamesWithOptionalIndex,
+  value,
+) => {
   if (Array.isArray(datarefNamesWithOptionalIndex)) {
-    return Promise.all(datarefNamesWithOptionalIndex.map(dataref => setDatarefValue(dataref, value))).then(results => {
-      return results[0]
-    })
+    await Promise.all(
+      datarefNamesWithOptionalIndex.map((dataref) =>
+        setDatarefValue(dataref, value),
+      ),
+    );
+  } else {
+    await setDatarefValue(datarefNamesWithOptionalIndex, value);
   }
-  
-  return setDatarefValue(datarefNamesWithOptionalIndex, value)
-}
+};

@@ -12,6 +12,7 @@ import chalk from "chalk";
 import { program } from "commander";
 import ora from "ora";
 
+import packageJson from "../package.json" with { type: "json" };
 import { getDatarefValues, initAPI, setDatarefValues } from "../src/api.js";
 import { copyToClipboard } from "../src/clipboard.js";
 import { getConfig } from "../src/config.js";
@@ -20,15 +21,13 @@ import { isAPIError, isEconnRefused } from "../src/error.js";
 import history from "../src/history.js";
 import { sleep } from "../src/sleep.js";
 
-import packageJson from '../package.json' with { type: 'json' };
-
 const PREFIX = "🛩 ";
 
 program
   .version(packageJson.version)
   .description(`${PREFIX} ${packageJson.name}\n${packageJson.description}`)
   .option("-p, --port <number>", "server port number")
-  .helpOption('-h, --help', 'display this help text');
+  .helpOption("-h, --help", "display this help text");
 
 /**
  * @param {string} command
@@ -52,8 +51,9 @@ const processCommand = async (command) => {
   }
 
   /**
-   * @param {number|string} value
+   * @param {number|string|Array<number|string>} value
    * @param {import('../src/config.js').Transform} transform
+   * @return {number|string|Array<number|string>}
    */
   const getTransformedValue = (value, transform) => {
     if (Array.isArray(value)) return value.slice();
@@ -84,15 +84,20 @@ const processCommand = async (command) => {
         return [
           new RegExp(c.pattern),
           async () => {
+            /** @type {number|string|Array<number|string>}*/
             let value = await getDatarefValues(c.dataref);
             c.transform?.forEach((t) => {
               value = getTransformedValue(value, t);
             });
-            const asString = String(value)
+            const asString = String(value);
             await copyToClipboard(asString);
-            const lines = asString.split('\n')
-            const firstLine = lines[0]
-            spinner.succeed(chalk.green(`${PREFIX} ${lines.length > 1 ? firstLine + '...' : firstLine}`));
+            const lines = asString.split("\n");
+            const firstLine = lines[0];
+            spinner.succeed(
+              chalk.green(
+                `${PREFIX} ${lines.length > 1 ? firstLine + "..." : firstLine}`,
+              ),
+            );
             hideCursor();
             await sleep(1500);
             clearLine();
@@ -103,9 +108,9 @@ const processCommand = async (command) => {
           new RegExp(c.pattern),
           async (regExpResult) => {
             let value = String(regExpResult[1]);
-            
+
             if (isNaN(Number(value))) {
-              const base64 = Buffer.from(value, 'utf-8').toString('base64');
+              const base64 = Buffer.from(value, "utf-8").toString("base64");
               await setDatarefValues(c.dataref, base64);
             } else {
               c.transform?.forEach((t) => {

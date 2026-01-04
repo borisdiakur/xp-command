@@ -11,15 +11,23 @@ import {
 import chalk from "chalk";
 import { program } from "commander";
 import ora from "ora";
+import { homedir } from "os";
+import { join } from "path";
 
 import packageJson from "../package.json" with { type: "json" };
 import { getDatarefValues, initAPI, setDatarefValues } from "../src/api.js";
 import { copyToClipboard } from "../src/clipboard.js";
-import { getConfig } from "../src/config.js";
+import { editConfig, getConfig } from "../src/config.js";
 import { clearLine, hideCursor, showCursor } from "../src/console.js";
 import { isAPIError, isEconnRefused } from "../src/error.js";
 import history from "../src/history.js";
+import { Logger } from "../src/logger.js";
 import { sleep } from "../src/sleep.js";
+
+const osHomedir = homedir();
+const logger = new Logger(join(osHomedir, ".xp-command", "log.txt"), {
+  clearOnStart: true,
+});
 
 const PREFIX = "🛩 ";
 
@@ -41,6 +49,7 @@ const processCommand = async (command) => {
   try {
     config = await getConfig();
   } catch (error) {
+    logger.error(error);
     if (isEconnRefused(error) || isAPIError(error)) {
       spinner.fail(chalk.red(`${PREFIX} No connection - in aircraft?`));
       hideCursor();
@@ -48,6 +57,15 @@ const processCommand = async (command) => {
       showCursor();
       return;
     }
+  }
+
+  if (command?.toLowerCase() === "config") {
+    await editConfig();
+    spinner.succeed(chalk.green(`${PREFIX} config`));
+    hideCursor();
+    await sleep(1500);
+    clearLine();
+    return;
   }
 
   /**
@@ -138,6 +156,7 @@ const processCommand = async (command) => {
 
         showCursor();
       } catch (error) {
+        logger.error(error);
         spinner.fail();
         hideCursor();
 

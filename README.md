@@ -146,9 +146,11 @@ The first time you run xp-command in a new aircraft, it automatically creates a 
 - **macOS/Linux:** `~/.xp-command/<Aircraft Name>.yml`
 - **Windows:** `%USERPROFILE%\.xp-command\<Aircraft Name>.yml`
 
+You can run the command `config` to open the aircraft configuration file in your system’s default YAML editor.
+
 ### Customizing commands
 
-You can edit these YAML files to add aircraft-specific commands or modify existing ones. Note that for changes to take effect you'll need to restart xp-command.
+You can edit these YAML files to add aircraft-specific commands or modify existing ones.
 
 **Example**: Add a command to set heading with 10-degree increments:
 

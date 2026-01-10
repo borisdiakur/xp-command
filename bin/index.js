@@ -15,7 +15,12 @@ import { homedir } from "os";
 import { join } from "path";
 
 import packageJson from "../package.json" with { type: "json" };
-import { getDatarefValues, initAPI, setDatarefValues } from "../src/api.js";
+import {
+  activateCommands,
+  getDatarefValues,
+  initAPI,
+  setDatarefValues,
+} from "../src/api.js";
 import { copyToClipboard } from "../src/clipboard.js";
 import { editConfig, getConfig } from "../src/config.js";
 import { clearLine, hideCursor, showCursor } from "../src/console.js";
@@ -97,11 +102,34 @@ const processCommand = async (command) => {
 
   /** @type {Array<[RegExp, (regExpResult: Array<string> | null) => Promise<void>]>} */
   const matches = config.commands.map((c) => {
+    if (!c.type) {
+      return [
+        new RegExp(c.pattern),
+        async () => {
+          spinner.fail(
+            chalk.red(`${PREFIX} Missing type (must be get or set)!`),
+          );
+          hideCursor();
+          await sleep(1500);
+          clearLine();
+          return;
+        },
+      ];
+    }
+
     switch (c.type) {
       case "get":
         return [
           new RegExp(c.pattern),
           async () => {
+            if (!c.dataref) {
+              spinner.fail(chalk.red(`${PREFIX} Missing dataref!`));
+              hideCursor();
+              await sleep(1500);
+              clearLine();
+              return;
+            }
+
             /** @type {number|string|Array<number|string>}*/
             let value = await getDatarefValues(c.dataref);
             c.transform?.forEach((t) => {
@@ -125,16 +153,30 @@ const processCommand = async (command) => {
         return [
           new RegExp(c.pattern),
           async (regExpResult) => {
-            let value = String(regExpResult[1]);
+            if (!c.command && !c.dataref) {
+              spinner.fail(
+                chalk.red(`${PREFIX} Neither dataref nor command provided!`),
+              );
+              hideCursor();
+              await sleep(1500);
+              clearLine();
+              return;
+            }
 
-            if (isNaN(Number(value))) {
-              const base64 = Buffer.from(value, "utf-8").toString("base64");
-              await setDatarefValues(c.dataref, base64);
-            } else {
-              c.transform?.forEach((t) => {
-                value = String(getTransformedValue(value, t));
-              });
-              await setDatarefValues(c.dataref, Number(value));
+            if (c.command) {
+              await activateCommands(c.command);
+            }
+            if (c.dataref) {
+              let value = String(regExpResult[1]);
+              if (isNaN(Number(value))) {
+                const base64 = Buffer.from(value, "utf-8").toString("base64");
+                await setDatarefValues(c.dataref, base64);
+              } else {
+                c.transform?.forEach((t) => {
+                  value = String(getTransformedValue(value, t));
+                });
+                await setDatarefValues(c.dataref, Number(value));
+              }
             }
             spinner.succeed(chalk.green(`${PREFIX} ${command}`));
             hideCursor();

@@ -38,6 +38,22 @@ const parseDataref = (datarefString) => {
 };
 
 /**
+ * @param {string} commandString
+ * @return {[string, number|null]}
+ */
+const parseCommand = (commandString) => {
+  // Regex pattern: captures base name and optional duration value
+  const pattern = /^(.+?)(?:\[(\d+)\])?$/;
+  const match = commandString.match(pattern);
+
+  if (!match) {
+    throw new CustomError("invalid_command");
+  }
+
+  return [match[1], match[2] ? parseInt(match[2]) : null];
+};
+
+/**
  * @param {string} datarefName
  * @return { Promise<number | null> }
  */
@@ -63,6 +79,54 @@ const getDatarefId = async (datarefName) => {
  */
 export const initAPI = (options) => {
   port = options.port;
+};
+
+/**
+ * @param {string} commandName
+ * @return {Promise<number|string>}
+ */
+export const getCommandId = async (commandName) => {
+  const url = new URL(`http://localhost:${port}/api/v2/commands`);
+  url.searchParams.set("filter[name]", commandName);
+  url.searchParams.set("fields", "id");
+
+  const response = await fetch(url);
+  const json = /** @type { {data:[{id: number }]} | APIError } */ (
+    await response.json()
+  );
+
+  if ("error_code" in json) {
+    throw new CustomError(json.error_code);
+  }
+
+  return json.data[0]?.id ?? null;
+};
+
+/**
+ * @param {string} commandNameWithOptionalDuration
+ */
+export const activateCommand = async (commandNameWithOptionalDuration) => {
+  const [commandName, duration] = parseCommand(commandNameWithOptionalDuration);
+
+  const commandId = await getCommandId(commandName);
+
+  const url = new URL(
+    `http://localhost:${port}/api/v2/command/${commandId}/activate`,
+  );
+
+  const response = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({ duration: duration || 0 }),
+  });
+  const json = /** @type { {data: number|string } | APIError } */ (
+    await response.json()
+  );
+
+  if (json && "error_code" in json) {
+    throw new CustomError(json.error_code);
+  }
+
+  return json;
 };
 
 /**
@@ -173,5 +237,21 @@ export const setDatarefValues = async (
     );
   } else {
     await setDatarefValue(datarefNamesWithOptionalIndex, value);
+  }
+};
+
+/**
+ * @param {string|Array<string>} commandNamesWithOptionalDuration
+ * @return {Promise<void>}
+ */
+export const activateCommands = async (commandNamesWithOptionalDuration) => {
+  if (Array.isArray(commandNamesWithOptionalDuration)) {
+    await Promise.all(
+      commandNamesWithOptionalDuration.map((command) =>
+        activateCommand(command),
+      ),
+    );
+  } else {
+    await activateCommand(commandNamesWithOptionalDuration);
   }
 };

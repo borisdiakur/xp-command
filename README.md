@@ -162,11 +162,12 @@ You can edit these YAML files to add aircraft-specific commands or modify existi
 - `pattern`: Regular expression matching your command (`hdg18`)
 - `type`: Either `get` (read value and copy to clipboard) or `set` (write value)
 - `dataref`: X-Plane dataref path (find these in X-Plane's DataRef Editor)
-- `transform`: Optional value conversions (multiply, divide, round, etc.)
+- `command`: X-Plane command path (find these in X-Plane's DataRef Editor)
+- `transform`: Optional value conversions (`mult<number>` to multiply or divide, `round`, `toFixed<number>` etc.)
 
 **Finding datarefs**: Use the [DataRefTool plugin](https://datareftool.com) or check [X-Plane datarefs documentation](https://developer.x-plane.com/datarefs/).
 
-#### Array Datarefs
+#### Array datarefs
 
 Many X-Plane datarefs are arrays (e.g., for multiple engines, generators, radios). You can access specific array elements using `[index]` notation:
 
@@ -190,11 +191,48 @@ Here is an example of a custom set command which sets multiple datarefs at once 
     - sim/flightmodel2/gear/is_chocked[2]
 ```
 
-## 🔄 Resetting Aircraft Profiles
+#### Using commands
+
+In addition to reading/writing datarefs, you can trigger X-Plane commands. Commands are actions (like button presses) rather than values.
+
+**Command field**: Use `command` instead of or alongside `dataref` in `set` type operations.
+
+**Duration syntax**: Append `[duration]` to specify how long the command stays active (in seconds):
+- `command` or `command[0]`: Press and immediately release (default behavior)
+- `command[5]`: Hold for 5 seconds then release
+- Maximum duration: 10 seconds
+
+**Examples**:
+
+```yaml
+# Toggle anti-ice group on
+- pattern: "^i(1)$"
+  type: set
+  command:
+    - FJS/Q4XP/Knobs/prop_heat_up
+    - FJS/Q4XP/Knobs/Airframe_deice_mode_up
+  dataref:
+    - FJS/Q4XP/Manips/TwoSwitch_Anim[8]
+    - FJS/Q4XP/Manips/TwoSwitch_Anim[9]
+    - FJS/Q4XP/Manips/TwoSwitch_Anim[10]
+```
+
+Here is an example demonstrating the usage of the duration option: In the Dash 8 (Q4XP), in order to change the transponder mode, you must press a tiny button for at least two seconds! Not anymore:
+
+```
+# Toggle transponder mode
+- pattern: "^x$"
+  type: set
+  command: FJS/Q4XP/SoftKey/arcdu_1/skr4[2]
+```
+
+**Finding commands**: Use the [DataRefTool plugin](https://datareftool.com) to browse available commands.
+
+## 🔄 Resetting aircraft profiles
 
 If you've edited an aircraft configuration and xp-command crashes or stops working, you can reset to default settings by deleting the config files.
 
-### Profile Location
+### Profile location
 
 Aircraft profiles are stored in:
 

@@ -26,6 +26,7 @@ const __dirname = dirname(__filename);
  * @property {RegExp} pattern - Regular expression pattern to match commands
  * @property {'get' | 'set'} type - Operation type
  * @property {string|Array<string>} dataref - X-Plane dataref path(s)
+ * @property {string|Array<string>} command - X-Plane command path(s)
  * @property {Transform[]} transform - Array of transformation operations to apply
  */
 

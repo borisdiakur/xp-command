@@ -79,9 +79,9 @@ Type `exit` or press `Ctrl+C`
 
 ---
 
-## 📋 Pre-configured commands
+## 📋 Pre-configured triggers
 
-All pre-configured commands work well with most aircraft I currently fly, but you may want to adjust them for **your** aircraft (see _Aircraft-specific profiles_ section below).
+All pre-configured triggers work well with most aircraft I currently fly, but you may want to adjust them for **your** aircraft (see _Aircraft-specific profiles_ section below).
 
 ### Barometric pressure
 

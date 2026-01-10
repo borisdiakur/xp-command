@@ -46,11 +46,7 @@ This installs xp-command globally so you can run it from anywhere.
 
 ## 🛠 X-Plane setup
 
-You shouldn't need to perform any extra setup steps in X-Plane. There is no plugin that needs to be installed. If you still want to check if the Web API (which allows xp-command to communicate with X-Plane) is configured correctly, here is how you can do it:
-
-1. In X-Plane 12, go to **Settings → Data Output**
-2. Find **"Enable Web Server API"** and make sure it's enabled
-3. Note the **port number** (default is `8086`)
+You do not need to do anything inside X-Plane for xp-command to work. X-Plane 12 runs a local Web API automatically on `http://localhost:8086` as long as it is not started with the `--no_web_server` command-line option and the port is free. Just make sure X-Plane is running on the same machine as xp-command and that nothing (firewall or another process) is blocking or using port `8086`.
 
 ---
 

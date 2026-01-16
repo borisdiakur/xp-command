@@ -39,18 +39,27 @@ const parseDataref = (datarefString) => {
 
 /**
  * @param {string} commandString
- * @return {[string, number|null]}
+ * @param {number|string} [value]
+ * @return {[string, number|null, number|null]}
  */
-const parseCommand = (commandString) => {
-  // Regex pattern: captures base name and optional duration value
-  const pattern = /^(.+?)(?:\[(\d+)\])?$/;
+const parseCommand = (commandString, value) => {
+  // Regex pattern: captures base name and optional duration and repeat count values
+  const pattern = /^(.+?)(?:\[(\d+)\])?(?:\[(\d+|\$)\])?$/;
   const match = commandString.match(pattern);
 
   if (!match) {
     throw new CustomError("invalid_command");
   }
 
-  return [match[1], match[2] ? parseInt(match[2]) : null];
+  let repeatCount = match[3] ? parseInt(match[3]) : null;
+  if (isNaN(repeatCount)) {
+    repeatCount = typeof value === "number" ? value : parseInt(value);
+  }
+  if (isNaN(repeatCount)) {
+    repeatCount = 1;
+  }
+
+  return [match[1], match[2] ? parseInt(match[2]) : null, repeatCount];
 };
 
 /**
@@ -104,9 +113,16 @@ export const getCommandId = async (commandName) => {
 
 /**
  * @param {string} commandNameWithOptionalDuration
+ * @param {number|string} [value]
  */
-export const activateCommand = async (commandNameWithOptionalDuration) => {
-  const [commandName, duration] = parseCommand(commandNameWithOptionalDuration);
+export const activateCommand = async (
+  commandNameWithOptionalDuration,
+  value,
+) => {
+  const [commandName, duration, repeatCount] = parseCommand(
+    commandNameWithOptionalDuration,
+    value,
+  );
 
   const commandId = await getCommandId(commandName);
 
@@ -114,19 +130,19 @@ export const activateCommand = async (commandNameWithOptionalDuration) => {
     `http://localhost:${port}/api/v2/command/${commandId}/activate`,
   );
 
-  const response = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify({ duration: duration || 0 }),
-  });
-  const json = /** @type { {data: number|string } | APIError } */ (
-    await response.json()
-  );
+  for (let i = Math.max(1, repeatCount ?? 1); i--; ) {
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({ duration: duration || 0 }),
+    });
+    const json = /** @type { {data: number|string } | APIError } */ (
+      await response.json()
+    );
 
-  if (json && "error_code" in json) {
-    throw new CustomError(json.error_code);
+    if (json && "error_code" in json) {
+      throw new CustomError(json.error_code);
+    }
   }
-
-  return json;
 };
 
 /**
@@ -242,16 +258,20 @@ export const setDatarefValues = async (
 
 /**
  * @param {string|Array<string>} commandNamesWithOptionalDuration
+ * @param {number|string} [value]
  * @return {Promise<void>}
  */
-export const activateCommands = async (commandNamesWithOptionalDuration) => {
+export const activateCommands = async (
+  commandNamesWithOptionalDuration,
+  value,
+) => {
   if (Array.isArray(commandNamesWithOptionalDuration)) {
     await Promise.all(
       commandNamesWithOptionalDuration.map((command) =>
-        activateCommand(command),
+        activateCommand(command, value),
       ),
     );
   } else {
-    await activateCommand(commandNamesWithOptionalDuration);
+    await activateCommand(commandNamesWithOptionalDuration, value);
   }
 };

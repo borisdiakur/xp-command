@@ -164,7 +164,15 @@ const processCommand = async (command) => {
             }
 
             if (c.command) {
-              await activateCommands(c.command);
+              let value = String(regExpResult[1]);
+              if (isNaN(Number(value))) {
+                await activateCommands(c.command);
+              } else {
+                c.transform?.forEach((t) => {
+                  value = String(getTransformedValue(value, t));
+                });
+                await activateCommands(c.command, Number(value));
+              }
             }
             if (c.dataref) {
               let value = String(regExpResult[1]);

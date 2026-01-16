@@ -200,7 +200,10 @@ In addition to reading/writing datarefs, you can trigger X-Plane commands. Comma
 **Duration syntax**: Append `[duration]` to specify how long the command stays active (in seconds):
 - `command` or `command[0]`: Press and immediately release (default behavior)
 - `command[5]`: Hold for 5 seconds then release
-- Maximum duration: 10 seconds
+
+**Repeat syntax**: Append `[repeatCount]` to specify how often the command should be repeated:
+- `command[0][3]`: Press and immediately release three times
+- `command[0][$]`: Press and immediately release as often as defined by captured value
 
 **Examples**:
 

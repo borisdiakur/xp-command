@@ -40,10 +40,12 @@ program
   .version(packageJson.version)
   .description(`${PREFIX} ${packageJson.name}\n${packageJson.description}`)
   .option("-p, --port <number>", "server port number")
+  .option("-r, --run <command>", "run a single command and exit")
   .helpOption("-h, --help", "display this help text");
 
 /**
  * @param {string} command
+ * @returns {Promise<boolean>} true if command succeeded, false otherwise
  */
 const processCommand = async (command) => {
   const spinner = ora(`${PREFIX} ${chalk.cyan(command ?? "")}`).start();
@@ -60,7 +62,7 @@ const processCommand = async (command) => {
       hideCursor();
       await sleep(1500);
       showCursor();
-      return;
+      return false;
     }
   }
 
@@ -70,7 +72,7 @@ const processCommand = async (command) => {
     hideCursor();
     await sleep(1500);
     clearLine();
-    return;
+    return true;
   }
 
   /**
@@ -100,7 +102,7 @@ const processCommand = async (command) => {
     return value;
   };
 
-  /** @type {Array<[RegExp, (regExpResult: Array<string> | null) => Promise<void>]>} */
+  /** @type {Array<[RegExp, (regExpResult: Array<string> | null) => Promise<boolean>]>} */
   const matches = config.commands.map((c) => {
     if (!c.type) {
       return [
@@ -112,7 +114,7 @@ const processCommand = async (command) => {
           hideCursor();
           await sleep(1500);
           clearLine();
-          return;
+          return false;
         },
       ];
     }
@@ -127,7 +129,7 @@ const processCommand = async (command) => {
               hideCursor();
               await sleep(1500);
               clearLine();
-              return;
+              return false;
             }
 
             /** @type {number|string|Array<number|string>}*/
@@ -147,6 +149,7 @@ const processCommand = async (command) => {
             hideCursor();
             await sleep(1500);
             clearLine();
+            return true;
           },
         ];
       case "set":
@@ -160,7 +163,7 @@ const processCommand = async (command) => {
               hideCursor();
               await sleep(1500);
               clearLine();
-              return;
+              return false;
             }
 
             if (c.command) {
@@ -190,6 +193,7 @@ const processCommand = async (command) => {
             hideCursor();
             await sleep(1500);
             clearLine();
+            return true;
           },
         ];
     }
@@ -199,12 +203,15 @@ const processCommand = async (command) => {
     const regexpResult = regexp.exec(command);
     if (regexpResult !== null) {
       try {
-        await cb(regexpResult);
+        const success = await cb(regexpResult);
 
-        spinner.succeed();
+        if (success) {
+          spinner.succeed();
+        }
         hideCursor();
 
         showCursor();
+        return success;
       } catch (error) {
         logger.error(error);
         spinner.fail();
@@ -228,8 +235,8 @@ const processCommand = async (command) => {
 
         await sleep(500);
         showCursor();
+        return false;
       }
-      return;
     }
   }
 
@@ -238,6 +245,7 @@ const processCommand = async (command) => {
 
   await sleep(1500);
   showCursor();
+  return false;
 };
 
 const sayHello = () => {
@@ -299,17 +307,27 @@ const askForCommand = async () => {
   await askForCommand();
 };
 
-program.action(async (/** @type {{ port: number | undefined }} */ options) => {
-  initAPI({ port: options.port ?? 8086 });
+program.action(
+  async (
+    /** @type {{ port: number | undefined, run: string | undefined }} */ options,
+  ) => {
+    initAPI({ port: options.port ?? 8086 });
 
-  hideCursor();
-  clearLine();
-  sayHello();
-  await sleep(1000);
-  showCursor();
+    if (options.run) {
+      history.addCommand(options.run);
+      const success = await processCommand(options.run);
+      process.exit(success ? 0 : 1);
+    }
 
-  await askForCommand();
-});
+    hideCursor();
+    clearLine();
+    sayHello();
+    await sleep(1000);
+    showCursor();
+
+    await askForCommand();
+  },
+);
 
 program.parse(process.argv);
 

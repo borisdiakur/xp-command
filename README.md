@@ -73,6 +73,16 @@ If you changed the Web API port from 8086 to another port, you'll need to start 
 xp-command --port 8090
 ```
 
+### One-shot mode
+
+Run a single command and exit immediately (useful for scripts or keybindings):
+
+```bash
+xp-command --run x7000
+```
+
+Exits with code `0` on success, `1` on failure.
+
 ### Exiting
 
 Type `exit` or press `Ctrl+C`

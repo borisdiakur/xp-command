@@ -1,19 +1,26 @@
-import { exec } from "child_process";
+import { spawn } from "child_process";
 
 /**
  * @param {string|number} text
  */
 export const copyToClipboard = async (text) => {
-  const command =
+  const cmd =
     process.platform === "win32"
-      ? `echo ${text} | clip`
+      ? { cmd: "clip", args: [] }
       : process.platform === "darwin"
-        ? `echo "${text}" | pbcopy`
-        : `echo "${text}" | xclip -selection clipboard`;
+        ? { cmd: "pbcopy", args: [] }
+        : { cmd: "xclip", args: ["-selection", "clipboard"] };
 
-  await new Promise((resolve) => {
-    exec(command, () => {
-      resolve();
-    });
+  return new Promise((resolve, reject) => {
+    const proc = spawn(cmd.cmd, cmd.args);
+    proc.stdin.write(
+      String(text)
+        .split("\n")
+        .filter((line) => !!line.trim())
+        .join("\n"),
+    );
+    proc.stdin.end();
+    proc.on("close", resolve);
+    proc.on("error", reject);
   });
 };

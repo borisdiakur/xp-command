@@ -14,6 +14,13 @@ export const isEconnRefused = (error) => {
 /**
  * @param {unknown} error
  */
+export const isConfigError = (error) => {
+  return Boolean(error instanceof Error && error.name === "YAMLException");
+};
+
+/**
+ * @param {unknown} error
+ */
 export const isAPIError = (error) => {
   return Boolean(error instanceof Error && error.name === "APIError");
 };

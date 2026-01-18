@@ -24,7 +24,7 @@ import {
 import { copyToClipboard } from "../src/clipboard.js";
 import { editConfig, getConfig } from "../src/config.js";
 import { clearLine, hideCursor, showCursor } from "../src/console.js";
-import { isAPIError, isEconnRefused } from "../src/error.js";
+import { isAPIError, isConfigError, isEconnRefused } from "../src/error.js";
 import history from "../src/history.js";
 import { Logger } from "../src/logger.js";
 import { sleep } from "../src/sleep.js";
@@ -59,6 +59,17 @@ const processCommand = async (command) => {
     logger.error(error);
     if (isEconnRefused(error) || isAPIError(error)) {
       spinner.fail(chalk.red(`${PREFIX} No connection - in aircraft?`));
+      hideCursor();
+      await sleep(1500);
+      showCursor();
+      return false;
+    }
+    if (isConfigError(error)) {
+      spinner.fail(
+        chalk.red(
+          `${PREFIX} Config error${typeof error.reason === "string" ? " - " + error.reason : ""}`,
+        ),
+      );
       hideCursor();
       await sleep(1500);
       showCursor();

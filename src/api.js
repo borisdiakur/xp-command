@@ -124,6 +124,13 @@ export const activateCommand = async (
     value,
   );
 
+  if (commandName === "sleep") {
+    if (duration) {
+      await new Promise((resolve) => setTimeout(resolve, duration * 1000));
+    }
+    return;
+  }
+
   const commandId = await getCommandId(commandName);
 
   const url = new URL(
@@ -246,11 +253,9 @@ export const setDatarefValues = async (
   value,
 ) => {
   if (Array.isArray(datarefNamesWithOptionalIndex)) {
-    await Promise.all(
-      datarefNamesWithOptionalIndex.map((dataref) =>
-        setDatarefValue(dataref, value),
-      ),
-    );
+    for (const dataref of datarefNamesWithOptionalIndex) {
+      await setDatarefValue(dataref, value);
+    }
   } else {
     await setDatarefValue(datarefNamesWithOptionalIndex, value);
   }
@@ -266,11 +271,9 @@ export const activateCommands = async (
   value,
 ) => {
   if (Array.isArray(commandNamesWithOptionalDuration)) {
-    await Promise.all(
-      commandNamesWithOptionalDuration.map((command) =>
-        activateCommand(command, value),
-      ),
-    );
+    for (const command of commandNamesWithOptionalDuration) {
+      await activateCommand(command, value);
+    }
   } else {
     await activateCommand(commandNamesWithOptionalDuration, value);
   }

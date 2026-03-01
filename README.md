@@ -241,6 +241,8 @@ Here is an example demonstrating the usage of the duration option: In the Dash 8
 
 **Finding commands**: Use the [DataRefTool plugin](https://datareftool.com) to browse available commands.
 
+**The special `sleep` command**: You can delay a command (and all subsequent commands) using the special `sleep` command with a dealy value in seconds (i.e. `- sleep[1]`).  
+
 ## 🔄 Resetting aircraft profiles
 
 If you've edited an aircraft configuration and xp-command crashes or stops working, you can reset to default settings by deleting the config files.

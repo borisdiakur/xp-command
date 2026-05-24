@@ -30,11 +30,11 @@ You need Node.js version 22 or higher installed on your system:
 
 1. **Download Node.js**: Go to https://nodejs.org/en/download/ and download the **LTS version** (Long Term Support)
 2. **Install**: Run the downloaded installer
-3. **Verify**: Open Terminal and type `node --version` (you should see something like `v22.x.x`)
+3. **Verify**: Open Terminal and type `node --version` (you should see something like `v25.x.x`)
 
 ### Step 2: Install xp-command globally
 
-Open Terminal and run:
+Open your terminal and run:
 
 ```bash
 npm install -g xp-command
